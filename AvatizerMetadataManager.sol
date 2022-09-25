@@ -14,7 +14,7 @@ interface AvatizersNFT {
 contract AvatizersMetadataManager is Ownable {
     using Strings for uint256;
 
-    mapping(uint256 => string) specialImages;
+    string specialImage;
 
     AvatizersNFT nftContract = AvatizersNFT(address(0));
 
@@ -22,8 +22,8 @@ contract AvatizersMetadataManager is Ownable {
         nftContract = AvatizersNFT(_nftContract);
     }
 
-    function setSpecialImage(uint256 tokenId, string memory svg) external onlyOwner {
-        specialImages[tokenId] = svg;
+    function setSpecialImage(string memory svg) external onlyOwner {
+        specialImage = svg;
     }
 
     function generateImage(bytes memory seed) public pure returns (string memory svg) {
@@ -59,10 +59,10 @@ contract AvatizersMetadataManager is Ownable {
 
     function tokenURI(uint256 tokenId) public view returns (string memory) {
         string memory image;
-        if (bytes(specialImages[tokenId]).length == 0) {
+        if (tokenId != 0) {
             image = generateImage(nftContract.getTokenGenes(tokenId));
         } else {
-            image = specialImages[tokenId];
+            image = specialImage;
         }
         return string.concat(
             "data:application/json;base64,",
@@ -71,7 +71,7 @@ contract AvatizersMetadataManager is Ownable {
                 '"image":"', image, '",',
                 '"attributes":[',
                 '{"trait_type":"Type",',
-                '"value":', (bytes(specialImages[tokenId]).length == 0)? '"Regular"' : '"Special"',
+                '"value":', (tokenId == 0)? '"Regular"' : '"Special"',
                 '}]}'
             ))
         );

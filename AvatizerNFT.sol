@@ -84,6 +84,12 @@ contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
         _safeMint(msg.sender, amount);
     }
 
+    function adminMint(address to, uint256 amount) external onlyOwner {
+        require(_totalMinted() + amount <= maxSupply, "Max Supply Exceeded");
+        require(amount <= 30, "Max mint per transaction exceeded");
+        _safeMint(to, amount);
+    }
+
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         return metadataManager.tokenURI(tokenId);
     }

@@ -11,7 +11,7 @@ interface AvatizersMetadataManager {
 
 contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
     uint256 public maxSupply = 999;
-    uint256 public maxPerWallet = 2;
+    uint256 public maxPerWallet = 1;
     
     bool public saleStarted;
     
@@ -88,6 +88,12 @@ contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
         require(_totalMinted() + amount <= maxSupply, "Max Supply Exceeded");
         require(amount <= 30, "Max mint per transaction exceeded");
         _safeMint(to, amount);
+    }
+
+    function rescueFunds(address to) external onlyOwner {
+        uint256 balance = address(this).balance;
+        (bool callSuccess, ) = payable(to).call{value: balance}("");
+        require(callSuccess, "Call failed");
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {

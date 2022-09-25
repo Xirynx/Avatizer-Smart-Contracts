@@ -2,30 +2,28 @@
 pragma solidity ^0.8.12;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 interface AvatizersMetadataManager {
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
-contract AvatizersNFT is ERC721("Avatizers", "AVA"), Ownable {
+contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
     uint256 public maxSupply = 999;
     uint256 public maxPerWallet = 2;
-    uint256 public totalSupply;
     
     bool public saleStarted;
     
     bytes32 public merkleRoot;
 
-    mapping(address => uint256) public numMinted;
     mapping(uint256 => bytes32) public tokenDNA;
     mapping(uint256 => bytes) public pausedTokenGenes;
 
-    AvatizersMetadataManager metadataManager = AvatizersMetadataManager(address(0));
+    AvatizersMetadataManager metadataManager = AvatizersMetadataManager(address(0)); //placeholder
 
     function setMaxSupply(uint256 _maxSupply) external onlyOwner {
-        require(_maxSupply > 0 && totalSupply < _maxSupply, "Invalid max supply");
+        require(_maxSupply > 0 && _totalMinted() < _maxSupply, "Invalid max supply");
         maxSupply = _maxSupply;
     }
     
@@ -70,20 +68,20 @@ contract AvatizersNFT is ERC721("Avatizers", "AVA"), Ownable {
         delete pausedTokenGenes[tokenId];
     }
 
-    function mint(uint256 amount, bytes32[] calldata _merkleProof) external payable {
+    function mint(uint64 amount, bytes32[] calldata _merkleProof) external {
         require(saleStarted, "Sale has not started yet");
-        require(totalSupply + amount <= maxSupply, "Max Supply Exceeded");
+        require(_totalMinted() + amount <= maxSupply, "Max Supply Exceeded");
         require(isWhitelisted(msg.sender, _merkleProof), "Address not whitelisted");
-        require(numMinted[msg.sender] + amount <= maxPerWallet, "Address cannot mint more");
+        uint64 numMinted = _getAux(msg.sender) + amount;
+        require(numMinted <= maxPerWallet, "Address cannot mint more tokens");
         unchecked {
-            numMinted[msg.sender] += amount;
-            uint256 currentSupply = totalSupply;
+            _setAux(msg.sender, numMinted);
+            uint256 startToken = _nextTokenId();
             for (uint256 i = 0; i < amount; i++) {
-                tokenDNA[++currentSupply] = keccak256(abi.encodePacked(msg.sender, currentSupply));
-                _safeMint(msg.sender, currentSupply);
+                tokenDNA[startToken + i] = keccak256(abi.encodePacked(msg.sender, startToken + i));
             }
-            totalSupply = currentSupply;
         }
+        _safeMint(msg.sender, amount);
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {

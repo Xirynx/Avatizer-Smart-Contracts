@@ -69,8 +69,9 @@ contract AvatizersMetadataManager is Ownable {
             Base64.encode(abi.encodePacked(
                 '{"name":"Avatizers #', tokenId.toString(), '",',
                 '"image":"', image, '",',
+                '"description":"Placeholder description",',
                 '"attributes":[',
-                '{"trait_type":"Type",',
+                '{"trait_type":"Rarity",',
                 '"value":', (tokenId == 0)? '"Regular"' : '"Special"',
                 '}]}'
             ))

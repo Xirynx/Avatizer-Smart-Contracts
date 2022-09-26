@@ -67,10 +67,8 @@ contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
         require(saleStarted, "Sale has not started yet");
         require(_totalMinted() + amount <= maxSupply, "Max Supply Exceeded");
         require(isWhitelisted(msg.sender, _merkleProof), "Address not whitelisted");
-        uint64 numMinted = _getAux(msg.sender) + amount;
-        require(numMinted <= maxPerWallet, "Address cannot mint more tokens");
+        require(_numberMinted(msg.sender) + amount <= maxPerWallet, "Address cannot mint more tokens");
         unchecked {
-            _setAux(msg.sender, numMinted);
             uint256 startToken = _nextTokenId();
             for (uint256 i = 0; i < amount; i++) {
                 tokenDNA[startToken + i] = keccak256(abi.encodePacked(msg.sender, startToken + i));

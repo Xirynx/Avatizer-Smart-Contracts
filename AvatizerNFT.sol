@@ -21,11 +21,6 @@ contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
     mapping(uint256 => bytes) public pausedTokenGenes;
 
     AvatizersMetadataManager metadataManager = AvatizersMetadataManager(address(0)); //placeholder
-
-    function setMaxSupply(uint256 _maxSupply) external onlyOwner {
-        require(_maxSupply > 0 && _totalMinted() < _maxSupply, "Invalid max supply");
-        maxSupply = _maxSupply;
-    }
     
     function setMaxPerWallet(uint256 _maxPerWallet) external onlyOwner {
         maxPerWallet = _maxPerWallet;

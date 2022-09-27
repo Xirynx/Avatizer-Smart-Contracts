@@ -45,7 +45,7 @@ contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
 
     function getTokenGenes(uint256 tokenId) public view returns (bytes memory) {
         if (pausedTokenGenes[tokenId].length == 0) {
-            return abi.encodePacked(tokenDNA[tokenId], (block.timestamp + 61200)/86400);
+            return abi.encodePacked(tokenDNA[tokenId], (block.timestamp + 25200)/86400);
         } else {
             return pausedTokenGenes[tokenId];
         }

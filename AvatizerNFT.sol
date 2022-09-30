@@ -5,11 +5,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-interface AvatizersMetadataManager {
+interface AvatizerMetadataManager {
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
-contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
+contract AvatizerNFT is ERC721A("Avatizer", "AVA"), Ownable {
     uint256 public maxSupply = 999;
     uint256 public maxPerWallet = 1;
     
@@ -20,7 +20,7 @@ contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
     mapping(uint256 => bytes32) public tokenDNA;
     mapping(uint256 => bytes) public pausedTokenGenes;
 
-    AvatizersMetadataManager metadataManager = AvatizersMetadataManager(address(0)); //placeholder
+    AvatizerMetadataManager metadataManager = AvatizerMetadataManager(address(0)); //placeholder
     
     function setMaxPerWallet(uint256 _maxPerWallet) external onlyOwner {
         maxPerWallet = _maxPerWallet;
@@ -35,7 +35,7 @@ contract AvatizersNFT is ERC721A("Avatizers", "AVA"), Ownable {
     }
 
     function setMetadataManager(address _metadataManager) external onlyOwner {
-        metadataManager = AvatizersMetadataManager(_metadataManager);
+        metadataManager = AvatizerMetadataManager(_metadataManager);
     }
 
     function isWhitelisted(address user, bytes32[] calldata _merkleProof) public view returns (bool) {

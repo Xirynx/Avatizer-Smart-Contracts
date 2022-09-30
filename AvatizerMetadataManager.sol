@@ -7,19 +7,19 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SignedMath.sol";
 import "./AvatizerSVGRenderer.sol";
 
-interface AvatizersNFT {
+interface AvatizerNFT {
     function getTokenGenes(uint256 tokenId) external view returns (bytes memory);
 }
 
-contract AvatizersMetadataManager is Ownable {
+contract AvatizerMetadataManager is Ownable {
     using Strings for uint256;
 
     string specialImage;
 
-    AvatizersNFT nftContract = AvatizersNFT(address(0));
+    AvatizerNFT nftContract = AvatizerNFT(address(0));
 
     function setNFTContract(address _nftContract) external onlyOwner {
-        nftContract = AvatizersNFT(_nftContract);
+        nftContract = AvatizerNFT(_nftContract);
     }
 
     function setSpecialImage(string memory svg) external onlyOwner {
@@ -30,24 +30,24 @@ contract AvatizersMetadataManager is Ownable {
         {
             svg = string.concat(
                 '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="-65 0 730 850">',
-                AvatizersSVGRenderer.genStyleSheet(seed, AvatizersSVGRenderer.genColourPalette(15, seed)),
+                AvatizerSVGRenderer.genStyleSheet(seed, AvatizerSVGRenderer.genColourPalette(15, seed)),
                 '<g transform="translate(-65 0)"><rect id="Background" class="st0" width="100%" height="100%"/></g>',
-                AvatizersSVGRenderer.genShards(seed),
-                AvatizersSVGRenderer.genNeck(seed),
+                AvatizerSVGRenderer.genShards(seed),
+                AvatizerSVGRenderer.genNeck(seed),
                 '<path id="Head" class="st4" d="M130.7,291.2l66,237.9l84.6,60.6L330,595l56.6-47.3l42.7-167.3l-14-152l-50.6-51.3l-94.6-20l-113.3,48.7L130.7,291.2z"/>',
-                AvatizersSVGRenderer.genDimples(seed)
+                AvatizerSVGRenderer.genDimples(seed)
             );
         }
         {
             svg = string.concat(
                 svg,
-                AvatizersSVGRenderer.genCheekbones(seed),
-                AvatizersSVGRenderer.genEyes(seed),
-                AvatizersSVGRenderer.genEyebrows(seed),
-                AvatizersSVGRenderer.genNose(seed),
-                AvatizersSVGRenderer.genLips(seed),
-                AvatizersSVGRenderer.genHair(seed),
-                AvatizersSVGRenderer.genStreaks(seed),
+                AvatizerSVGRenderer.genCheekbones(seed),
+                AvatizerSVGRenderer.genEyes(seed),
+                AvatizerSVGRenderer.genEyebrows(seed),
+                AvatizerSVGRenderer.genNose(seed),
+                AvatizerSVGRenderer.genLips(seed),
+                AvatizerSVGRenderer.genHair(seed),
+                AvatizerSVGRenderer.genStreaks(seed),
                 '</svg>'
             );
         }
@@ -67,12 +67,12 @@ contract AvatizersMetadataManager is Ownable {
         return string.concat(
             "data:application/json;base64,",
             Base64.encode(abi.encodePacked(
-                '{"name":"Avatizers #', tokenId.toString(), '",',
+                '{"name":"Avatizer #', tokenId.toString(), '",',
                 '"image":"', image, '",',
                 '"description":"Placeholder description",',
                 '"attributes":[',
                 '{"trait_type":"Rarity",',
-                '"value":', (tokenId == 0)? '"Regular"' : '"Special"',
+                '"value":', (tokenId == 0)? '"Special"' : '"Regular"',
                 '}]}'
             ))
         );

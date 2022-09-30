@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SignedMath.sol";
 
-library AvatizersSVGRenderer {
+library AvatizerSVGRenderer {
     using Strings for uint256;
 
     bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";

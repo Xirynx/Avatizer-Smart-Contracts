@@ -54,7 +54,7 @@ contract AvatizerNFT is ERC721A("Avatizer", "AVA"), Ownable {
     function pauseDNAGeneration(uint256 tokenId) external {
         require(ownerOf(tokenId) == msg.sender, "Only the token owner can pause token DNA");
         require(pausedTokenGenes[tokenId].length == 0, "Token DNA is already paused");
-        pausedTokenGenes[tokenId] = abi.encodePacked(tokenDNA[tokenId], (block.timestamp + 61200)/86400);
+        pausedTokenGenes[tokenId] = abi.encodePacked(tokenDNA[tokenId], (block.timestamp + 25200)/86400);
     }
 
     function unpauseDNAGeneration(uint256 tokenId) external {

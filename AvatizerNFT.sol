@@ -80,6 +80,12 @@ contract AvatizerNFT is ERC721A("Avatizer", "AVA"), Ownable {
     function adminMint(address to, uint256 amount) external onlyOwner {
         require(_totalMinted() + amount <= maxSupply, "Max Supply Exceeded");
         require(amount <= 30, "Max mint per transaction exceeded");
+        unchecked {
+            uint256 startToken = _nextTokenId();
+            for (uint256 i = 0; i < amount; i++) {
+                tokenDNA[startToken + i] = keccak256(abi.encodePacked(msg.sender, startToken + i));
+            }
+        }
         _safeMint(to, amount);
     }
 
@@ -87,6 +93,12 @@ contract AvatizerNFT is ERC721A("Avatizer", "AVA"), Ownable {
         uint256 balance = address(this).balance;
         (bool callSuccess, ) = payable(to).call{value: balance}("");
         require(callSuccess, "Call failed");
+    }
+
+    function rescueToken(address token) external OnlyOwner {
+        IERC20 tokenContract = IERC20(token);
+        uint256 balance = tokenContract.balanceOf(address(this));
+        tokenContract.transfer(msg.sender, balance);
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {

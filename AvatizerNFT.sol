@@ -4,6 +4,7 @@ pragma solidity ^0.8.12;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface AvatizerMetadataManager {
     function tokenURI(uint256 tokenId) external view returns (string memory);
@@ -95,7 +96,7 @@ contract AvatizerNFT is ERC721A("Avatizer", "AVA"), Ownable {
         require(callSuccess, "Call failed");
     }
 
-    function rescueToken(address token) external OnlyOwner {
+    function rescueToken(address token) external onlyOwner {
         IERC20 tokenContract = IERC20(token);
         uint256 balance = tokenContract.balanceOf(address(this));
         tokenContract.transfer(msg.sender, balance);

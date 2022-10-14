@@ -71,9 +71,9 @@ contract AvatizerMetadataManager is Ownable {
                 '"image":"', image, '",',
                 '"description":"Placeholder description",',
                 '"attributes":[',
-                '{"trait_type":"Rarity",',
-                '"value":', (tokenId == 0)? '"Special"' : '"Regular"',
-                '}]}'
+                '{"trait_type":"Avatizerity",',
+                '"value":"', tokenId.toString(),
+                '"}]}'
             ))
         );
     }
